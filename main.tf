@@ -79,3 +79,26 @@ resource "aws_security_group" "terra_sg" {
     Name = "terra_sg"
   }
 }
+
+# KeyPair
+resource "aws_key_pair" "terra-key" {
+  key_name = "terra-key"
+  #public_key = "ssh-rsa b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABDmOMdthXblis9sz1245DCfAAAAEAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIOTM3vse7lvKiR3ZCAIB+lLxqxm9qTXLysWRUqvHAtcHAAAAoJ2hcGxRimIwST91kf3fp/gsGuXBAb7GsB2yPgbm8cm9qSf7ZtSdWJbECh1rPzRPRzoePB3BQ+cxr+INdePFSftNP7IAo7CUHswXhEP56bweUQOHMkFdCabj6QKrPh7rVIKU3wlTzsCQKBKHaHnNPrNKpFjVKteEiSa5wErFtOYgBthBhZARuULlfPxDmdIKh69wW7knzEah+Zlh2lCjaNk= email@example.com"
+  public_key = file("~/.ssh/terra-aws.pub")
+}
+
+# EC2 Instance
+resource "aws_instance" "terra-linux01" {
+    instance_type = "t2.micro"
+    ami = data.aws_ami.terra_ami.id
+    key_name = aws_key_pair.terra-key.id
+    vpc_security_group_ids = [aws_security_group.terra_sg.id]
+    subnet_id = aws_subnet.terra_public_subnet.id
+    user_data = file("userdata.tpl")
+    tags = {
+        Name = "terra-linux01"
+    }
+    root_block_device  {
+        volume_size = 10
+    }
+}
