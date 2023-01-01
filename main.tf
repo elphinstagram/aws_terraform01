@@ -104,7 +104,7 @@ resource "aws_instance" "terra-linux01" {
 
 
     provisioner "local-exec" {
-      command = templatefile("windows-ssh-script.tpl",{
+      command = templatefile("${var.host_os}-ssh-script.tpl",{
         hostname = self.public_ip,
         user = "ubuntu",
         identityfile = "~/.ssh/terra-aws"
