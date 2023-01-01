@@ -101,4 +101,17 @@ resource "aws_instance" "terra-linux01" {
     root_block_device  {
         volume_size = 10
     }
+
+
+    provisioner "local-exec" {
+      command = templatefile("windows-ssh-script.tpl",{
+        hostname = self.public_ip,
+        user = "ubuntu",
+        identityfile = "~/.ssh/terra-aws"
+      })
+    interpreter = ["Powershell", "-Command"]
+    #interpreter = ["bash", "-c"]
+
+    }
+
 }
