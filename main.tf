@@ -109,7 +109,8 @@ resource "aws_instance" "terra-linux01" {
         user = "ubuntu",
         identityfile = "~/.ssh/terra-aws"
       })
-    interpreter = ["Powershell", "-Command"]
+    #interpreter = ["Powershell", "-Command"]
+    interpreter = var.host_os == "windows" ? ["Powershell", "-Command"] : ["bash", "-c"]
     #interpreter = ["bash", "-c"]
 
     }

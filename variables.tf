@@ -1,5 +1,5 @@
 variable host_os {
   type        = string
-  #default     = ""
+  default     = "windows"
   #description = "description"
 }
